@@ -16,6 +16,7 @@ import RequestErrorMsg from "#SRC/js/components/RequestErrorMsg";
 
 import ActionKeys from "../../constants/ActionKeys";
 import MarathonActions from "../../events/MarathonActions";
+import ServiceDeleteActions from "../../events/ServiceDeleteActions";
 import Pod from "../../structs/Pod";
 import PodDetail from "../pod-detail/PodDetail";
 import Service from "../../structs/Service";
@@ -210,7 +211,7 @@ class ServicesContainer extends React.Component {
   deleteGroup() {
     this.setPendingAction(ActionKeys.GROUP_DELETE);
 
-    return MarathonActions.deleteGroup(...arguments);
+    return ServiceDeleteActions.deleteGroup(...arguments);
   }
 
   editGroup() {
@@ -222,7 +223,7 @@ class ServicesContainer extends React.Component {
   deleteService() {
     this.setPendingAction(ActionKeys.SERVICE_DELETE);
 
-    return MarathonActions.deleteService(...arguments);
+    return ServiceDeleteActions.deleteService(...arguments);
   }
 
   editService() {
@@ -424,6 +425,10 @@ class ServicesContainer extends React.Component {
 
     if (!modalProps.service) {
       modalProps.service = service;
+    } else {
+      modalProps.service = DCOSStore.serviceTree.findItemById(
+        modalProps.service.id
+      );
     }
 
     return (
@@ -438,7 +443,7 @@ class ServicesContainer extends React.Component {
     );
   }
 
-  getEmpyPage(itemType) {
+  getEmptyPage(itemType) {
     const { itemId } = this.state;
 
     return (
@@ -561,7 +566,7 @@ class ServicesContainer extends React.Component {
     if (currentRoutePath.startsWith("/services/overview")) {
       // Not found
       if (!(item instanceof ServiceTree)) {
-        return this.getEmpyPage("group");
+        return this.getEmptyPage("group");
       }
 
       // TODO: move modals to Page
@@ -577,7 +582,7 @@ class ServicesContainer extends React.Component {
     }
 
     // Not found
-    return this.getEmpyPage("service");
+    return this.getEmptyPage("service");
   }
 }
 
