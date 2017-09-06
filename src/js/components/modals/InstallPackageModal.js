@@ -61,7 +61,7 @@ class InstallPackageModal
         name: "cosmosPackages",
         events: [
           "descriptionError",
-          "descriptionSuccess",
+          "packageDescriptionSuccess",
           "installError",
           "installSuccess"
         ]
@@ -121,7 +121,7 @@ class InstallPackageModal
     this.forceUpdate();
   }
 
-  onCosmosPackagesStoreDescriptionSuccess() {
+  onCosmosPackagesStorePackageDescriptionSuccess() {
     const { cosmosPackage } = this.props;
     const schemaIncorrect = !SchemaUtil.validateSchema(
       cosmosPackage.getConfig()
