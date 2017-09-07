@@ -93,7 +93,9 @@ class ServiceDetail extends mixin(TabsMixin) {
         }) != null;
     }
 
-    if (
+    if (actionID === EDIT && isSDKService(service)) {
+      this.editSDKService(service);
+    } else if (
       (containsSDKService || isSDKService(service)) &&
       !Hooks.applyFilter(
         "isEnabledSDKAction",
@@ -105,6 +107,15 @@ class ServiceDetail extends mixin(TabsMixin) {
     } else {
       this.handleServiceAction(actionID);
     }
+  }
+
+  // will use full screen modals Philipp is making
+  // for now: render into a blank page
+  editSDKService(service) {
+    const { router } = this.context;
+    router.push(
+      `/services/detail/${encodeURIComponent(service.getId())}/sdkservice/`
+    );
   }
 
   handleServiceAction(actionID) {

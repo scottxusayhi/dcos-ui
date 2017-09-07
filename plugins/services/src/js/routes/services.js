@@ -3,6 +3,7 @@ import { Redirect, Route, IndexRoute } from "react-router";
 import React from "react";
 /* eslint-enable no-unused-vars */
 
+import SDKServiceForm from "#SRC/js/components/SDKServiceForm";
 import ServicesContainer from "../containers/services/ServicesContainer";
 import CreateServiceModal from "../components/modals/CreateServiceModal";
 import ServicesPage from "../pages/ServicesPage";
@@ -79,6 +80,11 @@ const serviceRoutes = [
             type: Route,
             path: "edit(/:version)",
             component: CreateServiceModal
+          },
+          {
+            type: Route,
+            path: "sdkservice",
+            component: SDKServiceForm
           },
           // This route needs to be rendered outside of the tabs that are
           // rendered in the service-task-details route.
