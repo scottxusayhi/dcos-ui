@@ -1,5 +1,4 @@
 import { RequestUtil } from "mesosphere-shared-reactjs";
-import reqwest from "reqwest";
 
 import AppDispatcher from "#SRC/js/events/AppDispatcher";
 import {
@@ -38,32 +37,49 @@ const SDKEndpointsActions = {
       }
     });
   },
+
   fetchEndpoint(serviceId, endpointName) {
     const url = `/service/${serviceId}/v1/endpoints/${endpointName}`;
-    const r = reqwest({
-      url,
-      method: "GET",
-      success: resp => {
-        AppDispatcher.handleServerAction({
-          type: REQUEST_SDK_ENDPOINT_SUCCESS,
-          data: {
-            serviceId,
-            endpointData: resp,
-            contentType: r.request.getResponseHeader("Content-Type"),
-            endpointName
-          }
-        });
+    const fetch = new XMLHttpRequest();
+
+    fetch.open("GET", url);
+
+    fetch.addEventListener(
+      "load",
+      function(resp) {
+        const { currentTarget } = resp;
+        if (currentTarget.status === 200) {
+          AppDispatcher.handleServerAction({
+            type: REQUEST_SDK_ENDPOINT_SUCCESS,
+            data: {
+              serviceId,
+              endpointData: currentTarget.response,
+              contentType: currentTarget.contentType,
+              endpointName
+            }
+          });
+        }
       },
-      error: resp => {
+      false
+    );
+
+    fetch.addEventListener(
+      "error",
+      function(resp) {
+        const { currentTarget } = resp;
+
         AppDispatcher.handleServerAction({
           type: REQUEST_SDK_ENDPOINT_ERROR,
           data: {
             serviceId,
-            error: resp
+            error: currentTarget.response
           }
         });
-      }
-    });
+      },
+      false
+    );
+
+    fetch.send();
   }
 };
 
