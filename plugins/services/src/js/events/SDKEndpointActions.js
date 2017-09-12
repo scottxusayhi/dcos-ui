@@ -43,42 +43,33 @@ const SDKEndpointsActions = {
     const fetch = new XMLHttpRequest();
 
     fetch.open("GET", url);
+    fetch.onreadystatechange = function() {
+      if (fetch.readyState === 4) {
+        if (fetch.status === 200) {
+          const contentType = fetch.getResponseHeader("Content-Type");
 
-    fetch.addEventListener(
-      "load",
-      function(resp) {
-        const { currentTarget } = resp;
-        if (currentTarget.status === 200) {
           AppDispatcher.handleServerAction({
             type: REQUEST_SDK_ENDPOINT_SUCCESS,
             data: {
               serviceId,
-              endpointData: currentTarget.response,
-              contentType: currentTarget.contentType,
+              endpointData: contentType.includes("json")
+                ? JSON.parse(fetch.response)
+                : fetch.response,
+              contentType,
               endpointName
             }
           });
+        } else {
+          AppDispatcher.handleServerAction({
+            type: REQUEST_SDK_ENDPOINT_ERROR,
+            data: {
+              serviceId,
+              error: fetch.response
+            }
+          });
         }
-      },
-      false
-    );
-
-    fetch.addEventListener(
-      "error",
-      function(resp) {
-        const { currentTarget } = resp;
-
-        AppDispatcher.handleServerAction({
-          type: REQUEST_SDK_ENDPOINT_ERROR,
-          data: {
-            serviceId,
-            error: currentTarget.response
-          }
-        });
-      },
-      false
-    );
-
+      }
+    };
     fetch.send();
   }
 };

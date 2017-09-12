@@ -40,7 +40,7 @@ describe("SDKEndpointsActions", function() {
         );
       });
 
-      it("uses POST for the request method", function() {
+      it("uses GET for the request method", function() {
         expect(this.configuration.method).toEqual("GET");
       });
 
@@ -80,6 +80,53 @@ describe("SDKEndpointsActions", function() {
         this.configuration.error({
           responseJSON: { description: "foo" }
         });
+      });
+    });
+  });
+
+  describe("#fetchEndpoint", function() {
+    let mockXhr;
+    const serviceId = "foo";
+    const endpointName = "arangodb";
+
+    beforeEach(function() {
+      mockXhr = {
+        open: jest.fn(),
+        send: jest.fn(),
+        readyState: 4,
+        status: 200,
+        getResponseHeader: () => "application/json",
+        response: JSON.stringify({
+          data: "some data"
+        })
+      };
+
+      global.XMLHttpRequest = jest.fn(() => mockXhr);
+    });
+
+    it("XMLHttpRequest open was called", function() {
+      SDKEndpointsActions.fetchEndpoint(serviceId, endpointName);
+
+      expect(mockXhr.open).toHaveBeenCalled();
+    });
+
+    it("call open with GET request method and correct url", function() {
+      const url = `/service/${serviceId}/v1/endpoints/${endpointName}`;
+
+      SDKEndpointsActions.fetchEndpoint(serviceId, endpointName);
+
+      expect(mockXhr.open).toHaveBeenCalledWith("GET", url);
+    });
+
+    // TODO: AppDispatcher.register isn't receiving the action change
+    it.skip("dispatches the correct action when successful", function() {
+      SDKEndpointsActions.fetchEndpoint(serviceId, endpointName);
+      mockXhr.onreadystatechange();
+
+      const id = AppDispatcher.register(function(payload) {
+        const action = payload.action;
+        AppDispatcher.unregister(id);
+        expect(action.type).toEqual(ActionTypes.REQUEST_SDK_ENDPOINT_ERR);
       });
     });
   });
