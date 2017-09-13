@@ -85,7 +85,8 @@ describe("SDKEndpointsActions", function() {
   });
 
   describe("#fetchEndpoint", function() {
-    let mockXhr, originalXhr;
+    let mockXhr;
+    const originalXhr = global.XMLHttpRequest;
     const serviceId = "foo";
     const endpointName = "arangodb";
 
@@ -101,7 +102,6 @@ describe("SDKEndpointsActions", function() {
         })
       };
 
-      originalXhr = global.XMLHttpRequest;
       global.XMLHttpRequest = jest.fn(() => mockXhr);
     });
 
