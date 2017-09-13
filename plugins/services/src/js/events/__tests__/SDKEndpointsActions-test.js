@@ -85,7 +85,7 @@ describe("SDKEndpointsActions", function() {
   });
 
   describe("#fetchEndpoint", function() {
-    let mockXhr;
+    let mockXhr, originalXhr;
     const serviceId = "foo";
     const endpointName = "arangodb";
 
@@ -101,7 +101,12 @@ describe("SDKEndpointsActions", function() {
         })
       };
 
+      originalXhr = global.XMLHttpRequest;
       global.XMLHttpRequest = jest.fn(() => mockXhr);
+    });
+
+    afterEach(function() {
+      global.XMLHttpRequest = originalXhr;
     });
 
     it("XMLHttpRequest open was called", function() {
@@ -118,16 +123,29 @@ describe("SDKEndpointsActions", function() {
       expect(mockXhr.open).toHaveBeenCalledWith("GET", url);
     });
 
-    // TODO: AppDispatcher.register isn't receiving the action change
-    it.skip("dispatches the correct action when successful", function() {
+    it("dispatches the correct action when successful", function() {
       SDKEndpointsActions.fetchEndpoint(serviceId, endpointName);
-      mockXhr.onreadystatechange();
 
       const id = AppDispatcher.register(function(payload) {
         const action = payload.action;
         AppDispatcher.unregister(id);
-        expect(action.type).toEqual(ActionTypes.REQUEST_SDK_ENDPOINT_ERR);
+        expect(action.type).toEqual(ActionTypes.REQUEST_SDK_ENDPOINT_SUCCESS);
       });
+
+      mockXhr.onreadystatechange();
+    });
+
+    it("dispatches the correct action when unsuccessful", function() {
+      SDKEndpointsActions.fetchEndpoint(serviceId, endpointName);
+      mockXhr.status = 500;
+
+      const id = AppDispatcher.register(function(payload) {
+        const action = payload.action;
+        AppDispatcher.unregister(id);
+        expect(action.type).toEqual(ActionTypes.REQUEST_SDK_ENDPOINT_ERROR);
+      });
+
+      mockXhr.onreadystatechange();
     });
   });
 });
