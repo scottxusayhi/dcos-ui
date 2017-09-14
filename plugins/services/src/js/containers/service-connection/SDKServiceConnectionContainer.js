@@ -16,17 +16,7 @@ import AlertPanelHeader from "#SRC/js/components/AlertPanelHeader";
 import SDKEndpointActions from "../../events/SDKEndpointActions";
 import SDKEndpointStore from "../../stores/SDKEndpointStore";
 
-const METHODS_TO_BIND = [];
-
 class SDKServiceConnectionContainer extends React.Component {
-  constructor() {
-    super(...arguments);
-
-    METHODS_TO_BIND.forEach(method => {
-      this[method] = this[method].bind(this);
-    });
-  }
-
   componentDidMount() {
     SDKEndpointActions.fetchEndpoints(this.props.service.getId());
   }

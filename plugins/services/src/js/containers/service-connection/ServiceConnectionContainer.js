@@ -14,17 +14,7 @@ import Service from "../../structs/Service";
 import ServiceConfigUtil from "../../utils/ServiceConfigUtil";
 import { getDisplayValue } from "../../utils/ServiceConfigDisplayUtil";
 
-const METHODS_TO_BIND = [];
-
 class ServiceConnectionContainer extends React.Component {
-  constructor() {
-    super(...arguments);
-
-    METHODS_TO_BIND.forEach(method => {
-      this[method] = this[method].bind(this);
-    });
-  }
-
   getProtocolValue(portDefinition) {
     let protocol = portDefinition.protocol || "";
     protocol = protocol.replace(/,\s*/g, ", ");
