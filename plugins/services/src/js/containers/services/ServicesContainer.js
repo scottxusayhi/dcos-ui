@@ -13,6 +13,10 @@ import Loader from "#SRC/js/components/Loader";
 import MesosStateStore from "#SRC/js/stores/MesosStateStore";
 import Page from "#SRC/js/components/Page";
 import RequestErrorMsg from "#SRC/js/components/RequestErrorMsg";
+import {
+  REQUEST_COSMOS_PACKAGE_UNINSTALL_SUCCESS,
+  REQUEST_COSMOS_PACKAGE_UNINSTALL_ERROR
+} from "#SRC/js/constants/ActionTypes";
 
 import ActionKeys from "../../constants/ActionKeys";
 import MarathonActions from "../../events/MarathonActions";
@@ -300,6 +304,13 @@ class ServicesContainer extends React.Component {
         break;
       case REQUEST_MARATHON_SERVICE_RESTART_SUCCESS:
         this.unsetPendingAction(ActionKeys.SERVICE_RESTART);
+        break;
+
+      case REQUEST_COSMOS_PACKAGE_UNINSTALL_SUCCESS:
+        this.unsetPendingAction(ActionKeys.SERVICE_DELETE);
+        break;
+      case REQUEST_COSMOS_PACKAGE_UNINSTALL_ERROR:
+        this.unsetPendingAction(ActionKeys.SERVICE_EDIT, action.data);
         break;
     }
   }

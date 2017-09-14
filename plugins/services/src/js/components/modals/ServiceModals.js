@@ -70,6 +70,7 @@ class ServiceModals extends React.Component {
       if (groupFrameworks.length > 0) {
         return this.getCannotDestroyGroupModal(groupFrameworks);
       }
+
       deleteItem = force => this.props.actions.deleteGroup(service, force);
       key = ActionKeys.GROUP_DELETE;
     }
