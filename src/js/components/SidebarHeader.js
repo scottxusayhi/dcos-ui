@@ -9,6 +9,8 @@ import MetadataStore from "../stores/MetadataStore";
 import MesosSummaryStore from "../stores/MesosSummaryStore";
 import SidebarActions from "../events/SidebarActions";
 import UserAccountDropdown from "./UserAccountDropdown";
+import PluginSDK from "PluginSDK";
+import { logOutEvent } from "#SRC/js/components/LoginModal";
 
 const METHODS_TO_BIND = ["handleItemSelect", "handleTextCopy"];
 
@@ -137,6 +139,14 @@ class SidebarHeader extends mixin(StoreMixin) {
           SidebarActions.close();
           SidebarActions.openCliInstructions();
         }
+      },
+      {
+        html: "Log out",
+        id: "log-out",
+        onClick: () => {
+          console.log("log out");
+          PluginSDK.Store.dispatch(logOutEvent())
+        }
       }
     ];
 
@@ -159,3 +169,32 @@ SidebarHeader.contextTypes = {
 };
 
 module.exports = SidebarHeader;
+
+function createCookie(name, value, days) {
+  value = String.trim(value);
+  var expires = "";
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1, c.length);
+    }
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+
+  return null;
+}
+
+function eraseCookie(name) {
+  createCookie(name, "", -1);
+}

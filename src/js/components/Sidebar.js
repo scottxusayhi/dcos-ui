@@ -17,21 +17,24 @@ import ScrollbarUtil from "../utils/ScrollbarUtil";
 import SidebarActions from "../events/SidebarActions";
 import SidebarHeader from "./SidebarHeader";
 import SidebarStore from "../stores/SidebarStore";
+import { LoginModal } from "./LoginModal";
 
 const { NavigationService, EventTypes: { NAVIGATION_CHANGE } } = navigation;
 
 const defaultMenuItems = [
   "/dashboard",
   "/services",
-  "/jobs",
+  // "/jobs",
   "/catalog",
-  "/nodes",
-  "/networking",
-  "/secrets",
-  "/overview",
-  "/components",
-  "/settings",
-  "/organization"
+  // "/nodes",
+  // "/networking",
+  // "/secrets",
+  // "/overview",
+  // "/components",
+  // "/settings",
+  // "/organization",
+  "/fileserver",
+  "/k2docs"
 ];
 
 const { Hooks } = PluginSDK;
@@ -134,7 +137,7 @@ var Sidebar = React.createClass({
     return definition.map((group, index) => {
       let heading = null;
       const menuItems = this.getNavigationGroup(group);
-
+      console.log("menu items: ", menuItems);
       if (menuItems == null) {
         return null;
       }
@@ -170,6 +173,7 @@ var Sidebar = React.createClass({
     );
 
     const groupMenuItems = filteredItems.map((element, index) => {
+      console.log("filteredItems ", element, index);
       const { pathname } = this.props.location;
 
       const hasChildren = element.children && element.children.length !== 0;
@@ -352,6 +356,7 @@ var Sidebar = React.createClass({
           this.sidebarWrapperRef = ref;
         }}
       >
+        <LoginModal/>
         <CSSTransitionGroup
           transitionName="sidebar-backdrop"
           transitionEnterTimeout={250}

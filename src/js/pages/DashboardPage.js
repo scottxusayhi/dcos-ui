@@ -225,44 +225,44 @@ var DashboardPage = React.createClass({
               />
             </Panel>
           </div>
-          <div className={columnClasses}>
-            <Panel
-              className="dashboard-panel dashboard-panel-list dashboard-panel-list-service-health allow-overflow panel"
-              heading={this.getHeading(
-                "DASHBOARD.PANEL_HEADING.SERVICES_HEALTH"
-              )}
-              footer={this.getViewAllServicesBtn()}
-              footerClass="text-align-center"
-            >
-              <ServiceList
-                healthProcessed={DCOSStore.serviceDataReceived}
-                services={this.getServicesList()}
-              />
-            </Panel>
-          </div>
-          <div className={columnClasses}>
-            <Panel
-              className="dashboard-panel dashboard-panel-chart panel"
-              heading={this.getHeading("DASHBOARD.PANEL_HEADING.TASKS")}
-            >
-              <TasksChart tasks={data.tasks} />
-            </Panel>
-          </div>
-          <div className={columnClasses}>
-            <Panel
-              className="dashboard-panel dashboard-panel-list dashboard-panel-list-component-health panel"
-              heading={this.getHeading(
-                "DASHBOARD.PANEL_HEADING.COMPONENT_HEALTH"
-              )}
-              footer={this.getViewAllComponentsButton()}
-              footerClass="text-align-center"
-            >
-              <ComponentList
-                displayCount={this.props.componentsListLength}
-                units={this.getUnits()}
-              />
-            </Panel>
-          </div>
+          {/*<div className={columnClasses}>*/}
+            {/*<Panel*/}
+              {/*className="dashboard-panel dashboard-panel-list dashboard-panel-list-service-health allow-overflow panel"*/}
+              {/*heading={this.getHeading(*/}
+                {/*"DASHBOARD.PANEL_HEADING.SERVICES_HEALTH"*/}
+              {/*)}*/}
+              {/*footer={this.getViewAllServicesBtn()}*/}
+              {/*footerClass="text-align-center"*/}
+            {/*>*/}
+              {/*<ServiceList*/}
+                {/*healthProcessed={DCOSStore.serviceDataReceived}*/}
+                {/*services={this.getServicesList()}*/}
+              {/*/>*/}
+            {/*</Panel>*/}
+          {/*</div>*/}
+          {/*<div className={columnClasses}>*/}
+            {/*<Panel*/}
+              {/*className="dashboard-panel dashboard-panel-chart panel"*/}
+              {/*heading={this.getHeading("DASHBOARD.PANEL_HEADING.TASKS")}*/}
+            {/*>*/}
+              {/*<TasksChart tasks={data.tasks} />*/}
+            {/*</Panel>*/}
+          {/*</div>*/}
+          {/*<div className={columnClasses}>*/}
+            {/*<Panel*/}
+              {/*className="dashboard-panel dashboard-panel-list dashboard-panel-list-component-health panel"*/}
+              {/*heading={this.getHeading(*/}
+                {/*"DASHBOARD.PANEL_HEADING.COMPONENT_HEALTH"*/}
+              {/*)}*/}
+              {/*footer={this.getViewAllComponentsButton()}*/}
+              {/*footerClass="text-align-center"*/}
+            {/*>*/}
+              {/*<ComponentList*/}
+                {/*displayCount={this.props.componentsListLength}*/}
+                {/*units={this.getUnits()}*/}
+              {/*/>*/}
+            {/*</Panel>*/}
+          {/*</div>*/}
           <div className={columnClasses}>
             <Panel
               className="dashboard-panel dashboard-panel-chart dashboard-panel-chart-timeseries panel"

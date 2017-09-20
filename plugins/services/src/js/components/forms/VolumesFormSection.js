@@ -410,41 +410,41 @@ class VolumesFormSection extends Component {
             Add Local Volume
           </AddButton>
         </div>
-        <h3 className="short-bottom">
-          <FormGroupHeading>
-            <FormGroupHeadingContent primary={true}>
-              External Volumes
-            </FormGroupHeadingContent>
-          </FormGroupHeading>
-        </h3>
-        <p>
-          {
-            "Choose an external persistent volume if fault-tolerance is crucial for your service. "
-          }
-          <a
-            href={MetadataStore.buildDocsURI(
-              "/usage/storage/external-storage/"
-            )}
-            target="_blank"
-          >
-            More information
-          </a>.
-        </p>
-        {this.getExternalVolumesLines(
-          data.externalVolumes,
-          data.localVolumes.length
-        )}
-        <FormRow>
-          <FormGroup className="column-12">
-            <AddButton
-              onClick={this.props.onAddItem.bind(this, {
-                path: "externalVolumes"
-              })}
-            >
-              Add External Volume
-            </AddButton>
-          </FormGroup>
-        </FormRow>
+        {/*<h3 className="short-bottom">*/}
+          {/*<FormGroupHeading>*/}
+            {/*<FormGroupHeadingContent primary={true}>*/}
+              {/*External Volumes*/}
+            {/*</FormGroupHeadingContent>*/}
+          {/*</FormGroupHeading>*/}
+        {/*</h3>*/}
+        {/*<p>*/}
+          {/*{*/}
+            {/*"Choose an external persistent volume if fault-tolerance is crucial for your service. "*/}
+          {/*}*/}
+          {/*<a*/}
+            {/*href={MetadataStore.buildDocsURI(*/}
+              {/*"/usage/storage/external-storage/"*/}
+            {/*)}*/}
+            {/*target="_blank"*/}
+          {/*>*/}
+            {/*More information*/}
+          {/*</a>.*/}
+        {/*</p>*/}
+        {/*{this.getExternalVolumesLines(*/}
+          {/*data.externalVolumes,*/}
+          {/*data.localVolumes.length*/}
+        {/*)}*/}
+        {/*<FormRow>*/}
+          {/*<FormGroup className="column-12">*/}
+            {/*<AddButton*/}
+              {/*onClick={this.props.onAddItem.bind(this, {*/}
+                {/*path: "externalVolumes"*/}
+              {/*})}*/}
+            {/*>*/}
+              {/*Add External Volume*/}
+            {/*</AddButton>*/}
+          {/*</FormGroup>*/}
+        {/*</FormRow>*/}
       </div>
     );
   }

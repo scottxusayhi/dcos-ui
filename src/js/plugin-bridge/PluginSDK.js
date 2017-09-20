@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { StoreMixin } from "mesosphere-shared-reactjs";
 
+import { fakeAuth } from "#SRC/js/components/LoginModal";
 import { APPLICATION, PLUGIN_LOAD_TIMEOUT } from "../constants/PluginConstants";
 import { APP_STORE_CHANGE } from "../constants/EventTypes";
 import ActionsPubSub from "./middleware/ActionsPubSub";
@@ -24,7 +25,8 @@ const constants = {
 };
 
 const reducers = {
-  [APPLICATION]: AppReducer
+  [APPLICATION]: AppReducer,
+  "fakeAuth": fakeAuth
 };
 
 // Default pass through function when devTools are not enabled
@@ -42,12 +44,12 @@ if (
   // https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
   devToolIfEnabled = global.devToolsExtension();
 }
-
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // Create Redux Store
 const Store = createStore(
   combineReducers(reducers),
   initialState,
-  compose(applyMiddleware(...middleware), devToolIfEnabled)
+  composeEnhancers(applyMiddleware(...middleware), devToolIfEnabled)
 );
 
 /**

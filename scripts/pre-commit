@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Disabled
+exit 0
 
 SCRIPT_PATH="$(dirname "$0")/$(dirname "$(readlink "$0")")"
 

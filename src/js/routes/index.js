@@ -14,6 +14,8 @@ import services from "../../../plugins/services/src/js/routes/services";
 import settings from "./settings";
 import systemOverview from "./system-overview";
 import catalog from "./catalog";
+import fileserver from "./fileserver"
+import k2docs from "./k2docs"
 
 // Modules that produce routes
 const routeFactories = [Organization, Network];
@@ -33,7 +35,9 @@ function getApplicationRoutes() {
     catalog,
     systemOverview,
     components,
-    settings
+    settings,
+    fileserver,
+    k2docs
     // Plugins routes will be appended to this array
   );
 

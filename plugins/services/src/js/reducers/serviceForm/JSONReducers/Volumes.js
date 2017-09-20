@@ -37,6 +37,7 @@ function reduceVolumes(state, { type, path, value }) {
     return state;
   }
 
+  console.log("in JSONReducers/Volumes.js ", type, path, value)
   // `this` is a context which is given to every reducer so it could
   // cache information.
   // In this case we are caching an two array's one for the localVolumes
@@ -148,13 +149,22 @@ function reduceVolumes(state, { type, path, value }) {
     if (joinedPath === "localVolumes") {
       switch (type) {
         case ADD_ITEM:
-          this.localVolumes.push(
-            value || {
+          var newVolume = value || {
               containerPath: null,
               persistent: { size: null },
               mode: "RW"
-            }
-          );
+          }
+          console.log(newVolume)
+          newVolume = Object.assign({}, newVolume, {persistent: {size: newVolume.persistent.size, type:"path"}})
+          console.log(newVolume)
+          // this.localVolumes.push(
+          //   value || {
+          //     containerPath: null,
+          //     persistent: { size: null },
+          //     mode: "RW"
+          //   }
+          // );
+          this.localVolumes.push(newVolume)
           break;
         case REMOVE_ITEM:
           this.localVolumes = this.localVolumes.filter((item, index) => {

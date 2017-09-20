@@ -284,7 +284,11 @@ var MarathonActions = {
     Config.getRefreshRate(),
     function(resolve, reject) {
       return function() {
-        const url = buildURI("/groups");
+        var url = buildURI("/groups");
+        var user = readCookie("fake_auth_user")
+        if (user) {
+          url = buildURI("/groups/" + user);
+        }
         const embed = [
           { name: "embed", value: "group.groups" },
           { name: "embed", value: "group.apps" },
@@ -572,3 +576,17 @@ if (Config.useFixtures) {
 }
 
 module.exports = MarathonActions;
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === " ") {
+      c = c.substring(1, c.length);
+    }
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+
+  return null;
+}

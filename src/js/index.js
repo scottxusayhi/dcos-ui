@@ -86,6 +86,7 @@ RequestUtil.json = function(options = {}) {
 
       function renderApplicationToDOM() {
         const routes = RouterUtil.buildRoutes(appRoutes.getRoutes());
+        console.log("build routes: ", routes)
         NavigationServiceUtil.registerRoutesInNavigation(routes[0].childRoutes);
 
         renderAppToDOM(
