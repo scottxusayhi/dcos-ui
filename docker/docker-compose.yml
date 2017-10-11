@@ -1,0 +1,7 @@
+version: '2'
+services:
+  jarvis-master:
+    image: dev.k2data.com.cn:5001/jarvis/master:xudi-0.0.1
+    ports:
+    - 2999:2999
+    command: --mysql-addr=10.1.30.136:3306

@@ -151,12 +151,13 @@ function reduceVolumes(state, { type, path, value }) {
         case ADD_ITEM:
           var newVolume = value || {
               containerPath: null,
-              persistent: { size: null },
+              persistent: { size: null, type: "path" },
               mode: "RW"
           }
-          console.log(newVolume)
-          newVolume = Object.assign({}, newVolume, {persistent: {size: newVolume.persistent.size, type:"path"}})
-          console.log(newVolume)
+          // xudi : this is where I changed default persistent volume type
+          // console.log(newVolume)
+          // newVolume = Object.assign({}, newVolume, {persistent: {size: newVolume.persistent.size, type:"path"}})
+          // console.log(newVolume)
           // this.localVolumes.push(
           //   value || {
           //     containerPath: null,

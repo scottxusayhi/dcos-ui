@@ -2,8 +2,21 @@ import React from "react";
 import Icon from "../components/Icon";
 import FieldInput from "#SRC/js/components/form/FieldInput";
 import ReactMarkdown from "react-markdown"
+import Markdown from "react-remarkable"
 import fetch from 'isomorphic-fetch'
 import Page from "../components/Page";
+
+var marked = require('marked');
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: false,
+  smartLists: true,
+  smartypants: false
+});
 
 class K2DocsPage extends React.Component {
 
@@ -54,12 +67,17 @@ class K2DocsPage extends React.Component {
   render() {
     return (
       <Page>
-        {/*<div style={{flex: 1}}>*/}
-          <div className="panel-grid row">
-            {/*<div className="column-12 column-small-6 column-large-4">*/}
-              <ReactMarkdown source={this.state.content}/>
-            {/*</div>*/}
-          </div>
+        <div className="iframe-page-container">
+          <iframe
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            id="fileserver-iframe"
+            src="http://192.168.131.3:31080/k2docspage.html"
+          />
+        </div>
+        {/*<div className="panel-grid row">*/}
+          {/*<Markdown options={{html: true}} source={this.state.content}/>*/}
         {/*</div>*/}
       </Page>
     )

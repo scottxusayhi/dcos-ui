@@ -18,7 +18,110 @@ import MarathonTaskDetailsList from "../../components/MarathonTaskDetailsList";
 import TaskDirectoryStore from "../../stores/TaskDirectoryStore";
 import TaskEndpointsList from "../../components/TaskEndpointsList";
 
+import fetch from 'isomorphic-fetch'
+
 class TaskDetailsTab extends React.Component {
+
+  constructor() {
+    super();
+    this.webDockerUrl = "http://web-docker.ops.marathon.slave.mesos:9000";
+    this.dockerPort = "4243";
+    this.state = {
+      node: null,
+      container: null,
+      pty: null
+    }
+  }
+
+  componentDidMount() {
+    console.log("docker api mount");
+    const {task} = this.props;
+    // get container id
+    const node = CompositeState.getNodesList()
+      .filter({ ids: [task.slave_id] })
+      .last();
+    if (node != null) {
+      let dockerHost = node.getHostName()+":"+this.dockerPort;
+      let filters = {
+        label: ["MESOS_TASK_ID=" + task.id]
+      };
+      let url = "http://" + dockerHost + "/v1.24/containers/json?filters=" + JSON.stringify(filters);
+      console.log("docker api url ", url);
+
+    let checkStatus = response => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      } else {
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error
+      }
+    };
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(checkStatus)
+      .then(result => {
+        return result.json()
+      })
+      .then(json => {
+        console.log("bash-in-docker: get docker container ", json);
+        this.setState({
+          node: dockerHost,
+          container: json[0].Id
+        });
+        createPtySession(dockerHost, json[0].Id)
+      })
+      .catch(error=>{
+        console.error("bash-in-docker: get docker container error");
+      })
+    }
+
+    let createPtySession = (dockerHost, containerId) => {
+        // create pty session in web-docker
+      let url = this.webDockerUrl+"/api/v1/cmds/bash-in-docker";
+      let bashInDockerBody = {
+        dockerHost: dockerHost,
+        containerId: containerId
+      };
+
+      let checkStatus = response => {
+        if (response.status === 201) {
+          return response
+        } else {
+          var error = new Error(response.statusText);
+          error.response = response;
+          throw error
+        }
+      };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bashInDockerBody)
+      })
+        .then(checkStatus)
+        .then(result => {
+          return result.json()
+        })
+        .then(json => {
+          console.log("bash-in-docker: create pty", json);
+          this.setState({
+            pty: json.pid
+          })
+        })
+        .catch(error=>{
+          console.error("bash-in-docker: create pty error ");
+        })
+    }
+  }
+
   getContainerInfo(task) {
     if (task == null || !task.container) {
       return null;
@@ -54,6 +157,7 @@ class TaskDetailsTab extends React.Component {
     let nodeRow = null;
     let sandBoxRow = null;
     let resourceRows = null;
+    let containerRow = null;
 
     if (mesosTask.resources != null) {
       const resourceLabels = ResourcesUtil.getResourceLabels();
@@ -101,6 +205,32 @@ class TaskDetailsTab extends React.Component {
       );
     }
 
+    function openInNewWindow(url) {
+      var win = window.open(url, 'newwin', 'height=900px,width=700px');
+      if (win!=null) {
+        win.focus();
+      }
+    }
+
+    if (this.state.container) {
+      let containerId = this.state.container.substring(0, 12);
+      if (this.state.pty) {
+        containerId = (
+          <a onClick={()=>{openInNewWindow(this.webDockerUrl+"/"+this.state.pty+"/pty")}}>{containerId}</a>
+        )
+      }
+      containerRow = (
+        <ConfigurationMapRow>
+          <ConfigurationMapLabel>
+            Container
+          </ConfigurationMapLabel>
+          <ConfigurationMapValue>
+            {containerId}
+          </ConfigurationMapValue>
+        </ConfigurationMapRow>
+        )
+    }
+
     if (sandBoxPath) {
       sandBoxRow = (
         <ConfigurationMapRow>
@@ -129,6 +259,7 @@ class TaskDetailsTab extends React.Component {
         </ConfigurationMapRow>
         {serviceRow}
         {nodeRow}
+        {containerRow}
         {sandBoxRow}
         <ConfigurationMapRow>
           <ConfigurationMapLabel>
